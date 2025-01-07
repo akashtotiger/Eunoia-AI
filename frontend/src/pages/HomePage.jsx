@@ -5,12 +5,22 @@ import { FaPlus } from "react-icons/fa";
 import { CiLogout } from "react-icons/ci";
 import { IoSunnyOutline } from "react-icons/io5";
 import { IoSunnySharp } from "react-icons/io5";
+import { useUser } from "../store/user.store";
 
 const HomePage = () => {
   const navigate = useNavigate();
+  const { user, clearUser } = useUser();
+
+  console.log(user);
 
   const [isOpen, setIsOpen] = useState(false);
   const [darkTheme, setDarkTheme] = useState(true);
+
+  React.useEffect(() => {
+    if (user === null) {
+      navigate("/login");
+    }
+  }, [user]);
 
   return (
     <main
@@ -18,7 +28,7 @@ const HomePage = () => {
         darkTheme ? "bg-stone-950" : "bg-stone-200 text-black"
       }`}
     >
-      <nav className="w-full flex items-center justify-between p-2">
+      <nav className="flex items-center justify-between w-full p-2">
         <h2
           className={`text-2xl cursor-pointer font-bold ${
             darkTheme ? "text-white" : "text-black"
@@ -76,7 +86,9 @@ const HomePage = () => {
                 Contact
               </li>
               <button
-                onClick={() => navigate("/login")}
+                onClick={() => {
+                  clearUser();
+                }}
                 className={`mt-4 mb-2 flex items-center justify-center gap-2 px-8 py-2 rounded-full bg-red-500 group hover:scale-105 active:scale-95 shadow-xl transition-all duration-200`}
               >
                 <CiLogout />
@@ -134,7 +146,7 @@ const HomePage = () => {
           </button>
         </div>
       </nav>
-      <section className="w-full h-full flex flex-col items-center justify-center gap-5">
+      <section className="flex flex-col items-center justify-center w-full h-full gap-5">
         <h2
           className={`text-4xl max-w-sm text-center font-bold ${
             darkTheme ? "text-white" : "text-black"

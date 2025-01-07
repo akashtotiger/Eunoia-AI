@@ -7,9 +7,12 @@ import { GiHamburgerMenu } from "react-icons/gi";
 import { FaPlus } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { CiLogout } from "react-icons/ci";
+import { fetchChatMessages } from "../api/chat";
+import { useUser } from "../store/user.store";
 
 const Chat = () => {
   const navigate = useNavigate();
+  const { user } = useUser();
 
   const [messages, setMessages] = useState(conversation);
   const [isOpen, setIsOpen] = useState(false);
@@ -30,9 +33,26 @@ const Chat = () => {
     }
   };
 
+  const fetchAllMessages = async () => {
+    const data = await fetchChatMessages(user?.accessToken);
+    if (data?.success) {
+      setMessages(data?.payload);
+    }
+  };
+
+  React.useEffect(() => {
+    fetchAllMessages();
+  }, []);
+
+  React.useEffect(() => {
+    if (user === null) {
+      navigate("/login");
+    }
+  }, [user]);
+
   return (
-    <main className="h-screen flex items-center justify-center bg-stone-800 p-3">
-      <section className="rounded-xl h-full w-full bg-stone-900 flex">
+    <main className="flex items-center justify-center h-screen p-3 bg-stone-800">
+      <section className="flex w-full h-full rounded-xl bg-stone-900">
         {/* Left */}
         <div className="hidden md:flex flex-[0.18] rounded-xl rounded-r-none flex-col items-center justify-between py-10 px-4 gap-4 bg-stone-950 text-white">
           {/* Top */}
@@ -46,7 +66,7 @@ const Chat = () => {
                 }}
               />
             </h2>
-            <div className="list-none flex flex-col items-center w-full gap-2 text-lg justify-center">
+            <div className="flex flex-col items-center justify-center w-full gap-2 text-lg list-none">
               <li className="cursor-pointer hover:underline hover:underline-offset-8">
                 Features
               </li>
@@ -59,7 +79,7 @@ const Chat = () => {
             </div>
           </div>
           {/* Bottom */}
-          <div className="w-full flex items-center justify-center">
+          <div className="flex items-center justify-center w-full">
             <button
               onClick={() => navigate("/login")}
               className="bg-transparent flex items-center justify-center gap-2 px-10 py-2 border border-red-700 text-red-700 rounded-tr-[12px] rounded-bl-[12px] hover:rounded-tl-[12px] hover:rounded-br-[12px] hover:rounded-tr-none hover:rounded-bl-none hover:bg-red-700 hover:text-white transition-all duration-200"
@@ -71,7 +91,7 @@ const Chat = () => {
         </div>
         {/* Right */}
         <div className="md:flex-[0.82] rounded-tl-xl flex-1 flex flex-col rounded-xl md:rounded-tl-none rounded-l-none bg-stone-700 max-h-screen">
-          <div className="p-4 flex md:hidden items-center justify-between md:rounded-tl-none bg-stone-600 rounded-t-xl">
+          <div className="flex items-center justify-between p-4 md:hidden md:rounded-tl-none bg-stone-600 rounded-t-xl">
             <h2 className="text-xl font-bold">
               <Typewriter
                 options={{
@@ -117,8 +137,8 @@ const Chat = () => {
             )}
           </div>
           {/* Conversation */}
-          <div className="w-full overflow-y-auto p-2">
-            <div className="w-full h-full p-2 flex flex-col overflow-y-auto gap-4 md:gap-2">
+          <div className="w-full p-2 overflow-y-auto">
+            <div className="flex flex-col w-full h-full gap-4 p-2 overflow-y-auto md:gap-2">
               {messages.map((ele) => (
                 <div
                   key={ele.id}
@@ -140,7 +160,7 @@ const Chat = () => {
           {/* Footer */}
           <form
             onSubmit={handleSubmit}
-            className="flex p-2 items-center justify-center gap-2"
+            className="flex items-center justify-center gap-2 p-2"
           >
             <input
               type="text"

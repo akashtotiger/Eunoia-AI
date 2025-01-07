@@ -5,23 +5,23 @@ import { registerUser } from "../api/user";
 const Register = () => {
   const navigate = useNavigate();
 
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [name, setName] = React.useState("");
+  const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     const res = await registerUser({ name, email, password });
-    if (res.success) {
+    if (res?.success) {
       toast("Account created successfully. Redirecting...");
-      setTimeout(() => {
-        navigate("/");
-      }, 3000);
+      // setTimeout(() => {
+      navigate("/");
+      // }, 3000);
     }
   };
 
   return (
-    <main className="h-screen bg-stone-950 flex flex-col items-center justify-center text-white">
+    <main className="flex flex-col items-center justify-center h-screen text-white bg-stone-950">
       <section className="bg-stone-900 border border-white p-8 md:px-20 md:py-10 flex flex-col items-center justify-center gap-3 rounded-tl-[48px] rounded-br-[48px]">
         <h3 className="text-2xl md:text-4xl font-semibold text-center max-w-[16rem]">
           Create an account now
@@ -36,7 +36,7 @@ const Register = () => {
             autoComplete="off"
             type="text"
             value={name}
-            onChange={(event) =>setName(event.target.value)}
+            onChange={(event) => setName(event.target.value)}
             name="name"
             id="name"
           />
@@ -46,7 +46,7 @@ const Register = () => {
             autoComplete="off"
             type="email"
             value={email}
-            onChange={(event) =>setEmail(event.target.value)}
+            onChange={(event) => setEmail(event.target.value)}
             name="email"
             id="email"
           />
@@ -55,7 +55,7 @@ const Register = () => {
             placeholder="Password"
             type="password"
             value={password}
-            onChange={(event) =>setPassword(event.target.value)}
+            onChange={(event) => setPassword(event.target.value)}
             name="password"
             id="password"
           />
@@ -69,7 +69,7 @@ const Register = () => {
             <p className="mt-5">
               Already have an account?{" "}
               <span
-                className="text-blue-600 cursor-pointer underline underline-offset-4"
+                className="text-blue-600 underline cursor-pointer underline-offset-4"
                 onClick={() => navigate("/login")}
               >
                 Sign in

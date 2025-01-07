@@ -3,28 +3,39 @@ import { useNavigate } from "react-router-dom";
 import { ClipLoader } from "react-spinners";
 import { Bounce, ToastContainer, toast } from "react-toastify";
 import { loginUser } from "../api/user";
+import { useUser } from "../store/user.store";
 
 const Login = () => {
   const navigate = useNavigate();
 
+  const { user, setUser } = useUser();
+
+  console.log(user);
+
   const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState("");
-  const [ password, setPassword] = useState("");
+  const [password, setPassword] = useState("");
 
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
     toast("Logged in...");
     const result = await loginUser({ email, password });
-
-    setTimeout(() => {
+    setUser(result?.payload);
+    if (result?.success) {
       setIsLoading(false);
       navigate("/");
-    }, 5000);
+    }
   };
 
+  // React.useEffect(() => {
+  //   if (user !== null) {
+  //     navigate("/");
+  //   }
+  // }, [user]);
+
   return (
-    <main className="h-screen bg-stone-950 flex flex-col items-center justify-center text-white">
+    <main className="flex flex-col items-center justify-center h-screen text-white bg-stone-950">
       <section className="bg-stone-900 border border-white p-8 md:px-20 md:py-10 flex flex-col items-center justify-center gap-3 rounded-tl-[48px] rounded-br-[48px]">
         <h3 className="text-2xl md:text-4xl font-semibold text-center max-w-[16rem]">
           Sign in to your account
@@ -37,7 +48,7 @@ const Login = () => {
             className="bg-transparent focus-within:border-blue-400 border border-white px-4 py-2 focus-within:outline-none min-w-[16rem] max-w-[18rem] rounded-tr-[12px] rounded-bl-[12px]"
             placeholder="Email"
             value={email}
-            onChange={(e)=>setEmail(e.target.value)}
+            onChange={(e) => setEmail(e.target.value)}
             autoComplete="off"
             type="email"
             name="email"
@@ -47,7 +58,7 @@ const Login = () => {
             className="bg-transparent focus-within:border-blue-400 border border-white px-4 py-2 focus-within:outline-none min-w-[16rem] max-w-[18rem] rounded-tr-[12px] rounded-bl-[12px]"
             placeholder="Password"
             value={password}
-            onChange={(e) =>setPassword(e.target.value)}
+            onChange={(e) => setPassword(e.target.value)}
             type="password"
             name="password"
             id="password"
@@ -70,7 +81,7 @@ const Login = () => {
           </button>
           <div className="flex flex-col items-center justify-center gap-2">
             <p
-              className="text-blue-600 cursor-pointer underline underline-offset-4"
+              className="text-blue-600 underline cursor-pointer underline-offset-4"
               onClick={() => navigate("/reset")}
             >
               Forgot Password?
@@ -78,7 +89,7 @@ const Login = () => {
             <p className="mt-5">
               Don't have an account?{" "}
               <span
-                className="text-blue-600 cursor-pointer underline underline-offset-4"
+                className="text-blue-600 underline cursor-pointer underline-offset-4"
                 onClick={() => navigate("/register")}
               >
                 Sign up

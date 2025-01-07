@@ -18,6 +18,8 @@ const checkAuth = async (req, res, next) => {
       return res.status(400).send(new ApiResponse(400, null, "Missing token."));
     }
 
+    console.log("token => ", token);
+
     const payload = jwt.verify(token, env.AT_SECRET);
 
     req.user = payload;

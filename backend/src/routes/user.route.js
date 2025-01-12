@@ -7,8 +7,8 @@ userRouter.route("/register").post(userController.register);
 
 userRouter.route("/login").post(userController.login);
 
-userRouter.route("/reset").post(userController.reset);
+userRouter.route("/reset").patch(userController.reset);
 
-userRouter.route("/forgot").patch(userController.forgot);
+userRouter.route("/forgot").post(userController.forgot);
 
 export default userRouter;

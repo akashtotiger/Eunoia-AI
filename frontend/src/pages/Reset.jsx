@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import { resetPassword, sendMail } from "../api/user";
+
 const Reset = () => {
   const navigate = useNavigate();
   const [otpSent, setOtpSent] = useState(false);
@@ -17,8 +19,32 @@ const Reset = () => {
     setValidPassword(password.length > 0 && password === newPassword);
   }, [password, newPassword]);
 
-  const handleSubmit = (event) => {
+  
+
+  const handleVerifyClick = async () => {
+    if (!email.trim()) {
+      alert("Please enter your email.");
+      return;
+    }
+
+    const data = { email };
+    const response = await sendMail(data);
+
+    if (response?.success) {
+      alert("OTP has been sent to your email.");
+      setOtpSent(true);
+    } else {
+      alert("Failed to send OTP. Please try again.");
+    }
+  };
+
+  const handleSubmit = async(event) => {
     event.preventDefault();
+
+    if(!otpSent){
+      alert("please verify your email first.");
+      return
+    }
 
     if (otp.trim().length !== 6) {
       alert("Please enter a valid 6 digit OTP.");
@@ -32,11 +58,15 @@ const Reset = () => {
 
     // Everything is good, send to backend
     const data = { email, otp, newPassword: password };
-    console.log(data);
-  };
+    const response = await resetPassword(data)
+    // Add your API call for password reset here
 
-  const handleVerifyClick = () => {
-    setOtpSent(true);
+    if (response?.success){
+      alert("password has been successfully reset. please log with  yoyr new password");
+      navigate("/login");
+    }else{
+      alert("Failed to reset password.please try again.")
+    }
   };
 
   return (
@@ -107,6 +137,7 @@ const Reset = () => {
           {!otpSent && (
             <button
               className="bg-white hover:scale-105 active:scale-95 text-black w-[10rem] py-2 rounded-tr-[12px] rounded-bl-[12px] hover:rounded-br-[12px] hover:rounded-tl-[12px] hover:rounded-tr-none hover:rounded-bl-none transition-all duration-200"
+              type="button"
               onClick={handleVerifyClick}
             >
               Verify

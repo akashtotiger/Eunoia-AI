@@ -6,8 +6,8 @@ import resetPassword from "./User/reset.js";
 const userController = {
   login: loginUser,
   register: registerUser,
-  forgot: resetPassword,
-  reset: sendMail,
+  forgot: sendMail,
+  reset: resetPassword,
 };
 
 export default userController;

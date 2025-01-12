@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { registerUser } from "../api/user";
+import { toast } from "react-toastify"; // Added toast notification
 
 const Register = () => {
   const navigate = useNavigate();
@@ -12,11 +13,12 @@ const Register = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const res = await registerUser({ name, email, password });
+    
     if (res?.success) {
-      toast("Account created successfully. Redirecting...");
-      // setTimeout(() => {
-      navigate("/");
-      // }, 3000);
+      toast.success("Account created successfully. Redirecting...");
+      navigate("/"); // Navigate to home after successful registration
+    } else {
+      toast.error(res?.message || "Registration failed. Please try again.");
     }
   };
 
@@ -26,10 +28,7 @@ const Register = () => {
         <h3 className="text-2xl md:text-4xl font-semibold text-center max-w-[16rem]">
           Create an account now
         </h3>
-        <form
-          onSubmit={handleSubmit}
-          className="flex flex-col items-center justify-center gap-3"
-        >
+        <form onSubmit={handleSubmit} className="flex flex-col items-center justify-center gap-3">
           <input
             className="bg-transparent focus-within:border-blue-400 border border-white px-4 py-2 focus-within:outline-none min-w-[16rem] max-w-[18rem] rounded-tr-[12px] rounded-bl-[12px]"
             placeholder="Name"

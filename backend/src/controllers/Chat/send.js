@@ -5,7 +5,6 @@ import ApiResponse from "../../utils/ApiResponse.js";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const genAI = new GoogleGenerativeAI(env.GEMINI_API_KEY);
-
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
 const sendMessage = async (req, res) => {
@@ -19,7 +18,6 @@ const sendMessage = async (req, res) => {
     }
 
     const result = await model.generateContent(prompt);
-
     const response = result.response.text();
 
     const userMessage = await Message.create({
@@ -43,15 +41,11 @@ const sendMessage = async (req, res) => {
       createdHistory.chatHistory.push(aiMessage);
       await createdHistory.save();
 
-      return res
-        .status(201)
-        .send(
-          new ApiResponse(
-            201,
-            createdHistory.chatHistory,
-            "Chat history updated"
-          )
-        );
+      return res.status(201).send({
+        success: true,
+        message: "Chat history updated",
+        data: { response: aiMessage.content }, // Return the AI message content directly
+      });
     }
 
     existingHistory.chatHistory.push(userMessage);
@@ -59,20 +53,16 @@ const sendMessage = async (req, res) => {
 
     await existingHistory.save();
 
-    res
-      .status(201)
-      .send(
-        new ApiResponse(
-          201,
-          existingHistory.chatHistory,
-          "Chat history updated"
-        )
-      );
+    return res.status(201).send({
+      success: true,
+      message: "Message sent successfully.",
+      data: { response: aiMessage.content }, // Return the AI message content directly
+    });
   } catch (error) {
     console.log(error);
-    res
+    return res
       .status(500)
-      .send(new ApiResponse(500, error, "Failed to send messaage."));
+      .send(new ApiResponse(500, error, "Failed to send message."));
   }
 };
 

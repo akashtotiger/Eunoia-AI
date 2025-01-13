@@ -34,7 +34,7 @@ const HomePage = () => {
             darkTheme ? "text-white" : "text-black"
           }`}
         >
-          Athena AI
+          Eunoia AI
         </h2>
         <div className="relative flex items-center justify-center xl:hidden">
           <GiHamburgerMenu
@@ -159,7 +159,7 @@ const HomePage = () => {
             darkTheme ? "text-white" : "text-black"
           }`}
         >
-          Empower your journey with Athena AI — the ultimate platform for
+          Empower your journey with Eunoia AI — the ultimate platform for
           insights, automation, and intelligent solutions, designed to elevate
           your productivity and decision-making.
         </p>

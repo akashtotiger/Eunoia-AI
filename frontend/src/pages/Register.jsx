@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { registerUser } from "../api/user";
-import { toast } from "react-toastify"; // Added toast notification
+import { Bounce, toast, ToastContainer } from "react-toastify"; // Added toast notification
 
 const Register = () => {
   const navigate = useNavigate();
@@ -77,7 +77,21 @@ const Register = () => {
           </div>
         </form>
       </section>
+      <ToastContainer
+      position="top-right"
+      autoClose={5000}
+      hideProgressBar={false}
+      newestOnTop={false}
+      closeOnClick={false}
+      rtl = {false}
+      pauseOnFocusLoss
+      draggable
+      pauseOnHover
+      theme="dark"
+      transition={Bounce}
+      />
     </main>
+
   );
 };
 

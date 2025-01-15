@@ -4,6 +4,7 @@ import { Message } from "../../models/message.model.js";
 import ApiResponse from "../../utils/ApiResponse.js";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
+//using gemini API-keys
 const genAI = new GoogleGenerativeAI(env.GEMINI_API_KEY);
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
